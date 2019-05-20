@@ -1,0 +1,43 @@
+"""
+tools to convert specified type
+"""
+import torch as t
+import numpy as np
+
+def tonumpy(data):
+    if isinstance(data, np.ndarray):
+        return data
+    if isinstance(data, t.Tensor):
+        return data.detach().cpu().numpy()
+
+def totensor(data, cuda=True):
+    if isinstance(data, np.ndarray):
+        tensor = t.from_numpy(data)
+    if isinstance(data, t.Tensor):
+        tensor = data.detach()
+    if cuda:
+        tensor = tensor.cuda()
+    return tensor
+
+def scalar(data):
+    if isinstance(data, np.ndarray):
+        return data.reshape(1)[0]
+    if isinstance(data, t.Tensor):
+        return data.item()
+'''        
+#pytorch数据转换方法
+import numpy 
+import torch 
+from torch.autograd import Variable
+1、Numpy to tensor:       tensor_data_cpu = torch.from_numpy(np_data)
+2、Cpu tensor to cuda: tensor_data_cuda= tensor_data_cpu.cuda()
+3、Cuda data to Variable: tensor_data_cuda_var=Variable(tensor_data_cuda)
+4、Tensor to numpy: np_data=tensor_data_cuda.cpu().numpy()
+5、Variable to numpy: np_data=tensor_data_cuda_var.cpu().detach().numpy()
+6、np_data=tensor_data_cuda_var.view(-1).cpu().detach().numpy()
+
+#注意事项：
+#pytorch默认从numpy转为tensor.float64类型。
+#有时候将数据从tensor编程numpy时候，只支持一维数据，所以要用view函数，有时不需要，可以去掉".view(-1)"
+#cpu()函数作用是将数据从GPU上复制到memory上，相对应的函数是cuda()
+'''
